@@ -8,6 +8,9 @@ import com.caldremch.android.log.ILoggerFactory
  */
 internal class DefaultLoggerFactoryImpl : ILoggerFactory {
     override fun create(): ILogger {
-        return LoggerImpl()
+        if(Platform.isAndroid){
+            return AndroidLoggerImpl()
+        }
+        return JvmLoggerImpl()
     }
 }

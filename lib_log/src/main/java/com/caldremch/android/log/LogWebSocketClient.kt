@@ -7,7 +7,6 @@ import java.net.URI
 /**
  * Created by Leon on 2022/7/22
  * ws://192.168.101.2:8080/websocket
- * ws://10.30.107.119:8080/websocket
  */
 internal class LogWebSocketClient(private val uri: String) : WebSocketClient(URI(uri)) {
 

@@ -1,17 +1,17 @@
 package com.caldremch.android.log.impl
 
-import android.util.Log
 import com.caldremch.android.log.ILogger
 
 /**
- * Created by Leon on 2022/8/8.
+ * Created by Leon on 2022/8/30
  */
-internal class LoggerImpl : ILogger {
+class JvmLoggerImpl : ILogger {
     override fun d(tag: String, msg: String?) {
-        Log.d(tag, msg ?: "")
+        System.out.println("$tag:$msg")
     }
 
     override fun e(tag: String, msg: String?) {
-        Log.e(tag, msg ?: "")
+        System.err.println("$tag:$msg")
     }
+
 }

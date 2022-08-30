@@ -1,6 +1,5 @@
 package com.caldremch.android.log
 
-import android.util.Log
 
 /**
  * Created by Leon on 2022/7/10
