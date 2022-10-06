@@ -10,7 +10,14 @@ private const val DEFAULT_TAG = "debugLog"
 fun debugLogSimple(l: () -> String?) {
     if (DebugLogInitializer.enable) {
         val msg = l.invoke() ?: ""
-        Log.d(DEFAULT_TAG, msg)
+        DebugLogInitializer.sLogger?.d(DEFAULT_TAG, msg)
+    }
+}
+
+fun errorLogSimple(l: () -> String?) {
+    if (DebugLogInitializer.enable) {
+        val msg = l.invoke() ?: ""
+        DebugLogInitializer.sLogger?.e(DEFAULT_TAG, msg)
     }
 }
 

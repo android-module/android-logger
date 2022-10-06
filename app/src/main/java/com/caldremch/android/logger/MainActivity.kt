@@ -1,7 +1,8 @@
 package com.caldremch.android.logger
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.caldremch.android.log.DebugLogInitializer
 import com.caldremch.android.log.debugLog
 
@@ -10,8 +11,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        DebugLogInitializer.init(BuildConfig.DEBUG)
+    }
 
+    fun log(view: View) {
         debugLog { "log printer" }
     }
 }

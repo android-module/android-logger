@@ -25,7 +25,6 @@ object Log {
     @JvmStatic
     fun e(tag: String, msg: String?) {
         errorLog(tag) { msg }
-
     }
 
 }
