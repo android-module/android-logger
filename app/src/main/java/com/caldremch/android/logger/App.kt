@@ -9,7 +9,7 @@ import com.caldremch.android.log.DebugLogInitializer
 class App : Application(){
     override fun onCreate() {
         super.onCreate()
-        val logUrl = "ws://192.168.101.2:34001/websocket"
-        DebugLogInitializer.init(BuildConfig.DEBUG, logUrl)
+//        val logUrl = "ws://192.168.101.2:34001/websocket"
+        DebugLogInitializer.initWithDetect(BuildConfig.DEBUG)
     }
 }

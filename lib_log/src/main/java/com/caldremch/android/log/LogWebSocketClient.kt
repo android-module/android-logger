@@ -30,7 +30,7 @@ internal class LogWebSocketClient(private val uri: String) : WebSocketClient(URI
     override fun onError(ex: Exception?) {
         open = false
         errorLogSimple { "onError code = ${ex?.message}" }
-        ex?.printStackTrace()
+//        ex?.printStackTrace()
     }
 
     override fun send(text: String?) {
