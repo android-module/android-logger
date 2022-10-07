@@ -18,6 +18,7 @@ object DebugLogInitializer {
     internal var detectEnable = true
     private val port = 34000
     private val datagramSocket = DatagramSocket(port)
+    private const val  PROTOCOL = "C1WL2202208"
 
     private val lock = Object()
 
@@ -60,7 +61,7 @@ object DebugLogInitializer {
                     datagramSocket.receive(packet)
                     val result = String(packet.data, packet.offset, packet.length)
 
-                    if(result.isNotBlank()){
+                    if(result.isNotBlank() && result != PROTOCOL){
                         if(sServerLogger == null){
                             System.err.println("创建IServerLogger实例-->$result")
                             sServerLogger = DefaultServerLoggerFactoryImpl(result).create().apply {
@@ -69,10 +70,8 @@ object DebugLogInitializer {
                             }
                         }else if(sServerLogger!!.isConnected().not()){
                             sServerLogger!!.apply {
-                                if(getConnectUrl() != result){
-                                    System.err.println("IServerLogger执行重置并连接")
-                                    sServerLogger?.resetUrl(result)
-                                }
+                                System.err.println("IServerLogger执行重置并连接")
+                                sServerLogger?.resetUrl(result)
                             }
                         }
                     }
@@ -88,13 +87,12 @@ object DebugLogInitializer {
                         }
                         Thread.sleep((durationMills ?: 3L) * 1000)
                         val broadcastHost = "255.255.255.255"
-                        val message = "C1WL2202208"
 
                         //向服务器发送请求, 服务器根据请求信息做响应的处理
                         try {
                             val address: InetAddress = InetAddress.getByName(broadcastHost)
                             val datagramPacket =
-                                DatagramPacket(message.toByteArray(), message.length, address, port)
+                                DatagramPacket(PROTOCOL.toByteArray(), PROTOCOL.length, address, port)
                             datagramSocket.send(datagramPacket)
                         } catch (e: Exception) {
                         }

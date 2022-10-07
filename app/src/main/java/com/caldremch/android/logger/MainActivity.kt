@@ -6,6 +6,7 @@ import android.os.HandlerThread
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.caldremch.android.log.debugLog
+import com.caldremch.android.log.errorLog
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     fun log(view: View) {
 
-        debugLog { "log printer" }
+        debugLog { "log printer debug" }
+        errorLog { "log printer error" }
     }
 }

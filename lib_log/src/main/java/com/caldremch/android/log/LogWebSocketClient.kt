@@ -24,12 +24,12 @@ internal class LogWebSocketClient(private val uri: String) : WebSocketClient(URI
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
         open = false
-        debugLogSimple { "onClose code = $code, reason=$reason" }
+//        debugLogSimple { "onClose code = $code, reason=$reason" }
     }
 
     override fun onError(ex: Exception?) {
         open = false
-        errorLogSimple { "onError code = ${ex?.message}" }
+//        errorLogSimple { "onError code = ${ex?.message}" }
 //        ex?.printStackTrace()
     }
 
@@ -37,11 +37,11 @@ internal class LogWebSocketClient(private val uri: String) : WebSocketClient(URI
         if (open) {
             super.send(text)
         }else{
-            try {
-                reconnect()
-            }catch (e:Exception){
-                errorLogSimple { "send ${e.message}" }
-            }
+//            try {
+//                reconnect()
+//            }catch (e:Exception){
+//                errorLogSimple { "send ${e.message}" }
+//            }
         }
     }
 
