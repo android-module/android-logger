@@ -19,16 +19,28 @@ object DebugLogInitializer {
     private val port = 34000
     private val datagramSocket = DatagramSocket(port)
 
+    private val lock = Object()
+
     @JvmStatic
     fun pauseDetect() {
-
+        detectEnable = false
     }
 
     @JvmStatic
     fun resumeDetect() {
+        if(detectEnable.not()){
+            synchronized(lock){
+                try{
+                    lock.notify()
+                }catch(e:Exception){
+                    e.printStackTrace()
+                }finally{
 
+                }
+            }
+        }
+        detectEnable = true
     }
-
 
     @JvmStatic
     fun initWithDetect(
@@ -40,7 +52,6 @@ object DebugLogInitializer {
         sLogger = loggerFactory?.create() ?: DefaultLoggerFactoryImpl().create()
 
         if (enable) {
-
             thread(true) {
                 while (true) {
                     /*接收信息*/
@@ -71,17 +82,22 @@ object DebugLogInitializer {
 
             thread(true) {
                 while (true) {
-                    Thread.sleep((durationMills ?: 3L) * 1000)
-                    val broadcastHost = "255.255.255.255"
-                    val message = "C1WL2202208"
+                    synchronized(lock){
+                        if(detectEnable.not()){
+                            lock.wait()
+                        }
+                        Thread.sleep((durationMills ?: 3L) * 1000)
+                        val broadcastHost = "255.255.255.255"
+                        val message = "C1WL2202208"
 
-//                    向服务器发送请求, 服务器根据请求信息做响应的处理
-                    try {
-                        val address: InetAddress = InetAddress.getByName(broadcastHost)
-                        val datagramPacket =
-                            DatagramPacket(message.toByteArray(), message.length, address, port)
-                        datagramSocket.send(datagramPacket)
-                    } catch (e: Exception) {
+                        //向服务器发送请求, 服务器根据请求信息做响应的处理
+                        try {
+                            val address: InetAddress = InetAddress.getByName(broadcastHost)
+                            val datagramPacket =
+                                DatagramPacket(message.toByteArray(), message.length, address, port)
+                            datagramSocket.send(datagramPacket)
+                        } catch (e: Exception) {
+                        }
                     }
                 }
             }
