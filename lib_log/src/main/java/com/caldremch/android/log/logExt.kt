@@ -1,5 +1,7 @@
 package com.caldremch.android.log
 
+import java.net.URLEncoder
+
 
 /**
  * Created by Leon on 2022/7/10
@@ -22,7 +24,8 @@ fun errorLogSimple(l: () -> String?) {
 }
 
 private fun wrapJsonWith(level:Int, msg:String):String{
-    return "{\"level\":$level,\"msg\":\"$msg\"}"
+    val ret =  "{\"level\":$level,\"msg\":\"$msg\"}"
+    return URLEncoder.encode(ret, "utf-8")
 }
 
 fun debugLog(tag: String, l: () -> String?) {

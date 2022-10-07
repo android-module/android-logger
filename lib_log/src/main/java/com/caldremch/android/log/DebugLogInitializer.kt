@@ -15,9 +15,10 @@ object DebugLogInitializer {
     internal var enable: Boolean = false
     internal var sLogger: ILogger? = null
     internal var sServerLogger: IServerLogger? = null
-    internal var detectEnable = true
-    private val port = 34000
-    private val datagramSocket = DatagramSocket(port)
+    private var detectEnable = true
+    private const val port = 34000
+    private const val maxPort = 34010
+    private lateinit var datagramSocket:DatagramSocket
     private const val  PROTOCOL = "C1WL2202208"
 
     private val lock = Object()
@@ -43,6 +44,23 @@ object DebugLogInitializer {
         detectEnable = true
     }
 
+    private fun circleCreateSocket(port:Int): Int {
+        System.err.println("检查端口:$port 占用情况")
+        if(port> maxPort) return -1
+        try{
+            datagramSocket = DatagramSocket(port)
+            System.err.println("$port 未占用")
+            return port
+        }catch(e:Exception){
+            if(e.message?.contains("EADDRINUSE") == true){
+                System.err.println("$port 已占用")
+               return circleCreateSocket(port+1)
+            }
+            throw RuntimeException(e)
+        }
+
+    }
+
     @JvmStatic
     fun initWithDetect(
         logEnable: Boolean,
@@ -54,13 +72,37 @@ object DebugLogInitializer {
 
         if (enable) {
             thread(true) {
+
+               val finalPort = circleCreateSocket(port)
+                System.err.println("最终端口:$finalPort")
+                if(finalPort == -1) throw RuntimeException("logger init error with all port already used")
+                thread(true) {
+                    while (true) {
+                        synchronized(lock){
+                            if(detectEnable.not()){
+                                lock.wait()
+                            }
+                            Thread.sleep((durationMills ?: 3L) * 1000)
+                            val broadcastHost = "255.255.255.255"
+
+                            //向服务器发送请求, 服务器根据请求信息做响应的处理
+                            try {
+                                val address: InetAddress = InetAddress.getByName(broadcastHost)
+                                val datagramPacket =
+                                    DatagramPacket(PROTOCOL.toByteArray(), PROTOCOL.length, address, finalPort)
+                                datagramSocket.send(datagramPacket)
+                            } catch (e: Exception) {
+                            }
+                        }
+                    }
+                }
+
                 while (true) {
                     /*接收信息*/
                     val data = ByteArray(1024)
                     val packet = DatagramPacket(data, data.size)
                     datagramSocket.receive(packet)
                     val result = String(packet.data, packet.offset, packet.length)
-
                     if(result.isNotBlank() && result != PROTOCOL){
                         if(sServerLogger == null){
                             System.err.println("创建IServerLogger实例-->$result")
@@ -79,26 +121,7 @@ object DebugLogInitializer {
             }
 
 
-            thread(true) {
-                while (true) {
-                    synchronized(lock){
-                        if(detectEnable.not()){
-                            lock.wait()
-                        }
-                        Thread.sleep((durationMills ?: 3L) * 1000)
-                        val broadcastHost = "255.255.255.255"
 
-                        //向服务器发送请求, 服务器根据请求信息做响应的处理
-                        try {
-                            val address: InetAddress = InetAddress.getByName(broadcastHost)
-                            val datagramPacket =
-                                DatagramPacket(PROTOCOL.toByteArray(), PROTOCOL.length, address, port)
-                            datagramSocket.send(datagramPacket)
-                        } catch (e: Exception) {
-                        }
-                    }
-                }
-            }
         }
 
     }
