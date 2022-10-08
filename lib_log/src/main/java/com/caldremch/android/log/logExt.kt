@@ -24,8 +24,11 @@ fun errorLogSimple(l: () -> String?) {
 }
 
 private fun wrapJsonWith(level:Int, msg:String):String{
-    val ret =  "{\"level\":$level,\"msg\":\"$msg\"}"
-    return URLEncoder.encode(ret, "utf-8")
+    val msgBytes = msg.toByteArray()
+    val sendBytes = ByteArray(1+msgBytes.size)
+    sendBytes[0] = level.toByte()
+    System.arraycopy(msgBytes, 0, sendBytes, 1, msgBytes.size)
+    return String(sendBytes)
 }
 
 fun debugLog(tag: String, l: () -> String?) {
