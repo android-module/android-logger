@@ -1,0 +1,16 @@
+def isRemote(){
+    def what = false
+    if(project.hasProperty("remoteDep")){
+        what = remoteDep.toBoolean()
+    }
+    return what
+}
+
+ext{
+    isRemote=this.&isRemote
+}
+
+project.ext{
+    remoteDep=false
+}
+

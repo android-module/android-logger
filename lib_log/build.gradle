@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
 }
 
-
+apply from: "../versions.gradle"
 
 dependencies {
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
@@ -16,4 +16,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-apply from: "../gradle-maven-kotlin-dsl/mavencentral-with-maven-publish.gradle"
+if(isRemote()){
+    apply from: "../gradle-maven-kotlin-dsl/mavencentral-with-maven-publish.gradle"
+}
+
