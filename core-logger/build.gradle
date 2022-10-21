@@ -16,6 +16,13 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+ext {
+    myLibraryVersion=core_logger_version
+    myLibraryName="core-logger"
+    myArtifactId="core-logger"
+    myLibraryDescription="core-logger"
+}
+
 if(isRemote()){
     apply from: "../gradle-maven-kotlin-dsl/mavencentral-with-maven-publish.gradle"
 }

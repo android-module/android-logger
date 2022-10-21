@@ -1,13 +1,11 @@
 package com.caldremch.android.log
 
+import com.caldremch.android.log.base.ILogger
+import com.caldremch.android.log.base.ILoggerFactory
+import com.caldremch.android.log.base.IServerLogger
 import com.caldremch.android.log.detector.INetLogDetector
 import com.caldremch.android.log.detector.NetLogDetector
 import com.caldremch.android.log.impl.DefaultLoggerFactoryImpl
-import com.caldremch.android.log.impl.DefaultServerLoggerFactoryImpl
-import java.net.DatagramPacket
-import java.net.DatagramSocket
-import java.net.InetAddress
-import kotlin.concurrent.thread
 
 /**
  * Created by Leon on 2022/8/7.

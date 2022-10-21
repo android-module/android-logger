@@ -1,14 +1,14 @@
 package com.caldremch.android.log.impl
 
-import com.caldremch.android.log.IServerLogger
-import com.caldremch.android.log.LogWebSocketClient
+import com.caldremch.android.log.base.IServerLogger
+import com.caldremch.android.log.inter.LogWebSocketClient
 
 /**
  * Created by Leon on 2022/8/8.
  */
 internal class ServerLoggerImpl(private var uri: String) : IServerLogger {
 
-    private var instance:LogWebSocketClient? = LogWebSocketClient("ws://$uri/websocket")
+    private var instance: LogWebSocketClient? = LogWebSocketClient("ws://$uri/websocket")
     override fun getConnectUrl(): String {
         return uri
     }

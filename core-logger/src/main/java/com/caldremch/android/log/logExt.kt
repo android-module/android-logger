@@ -1,5 +1,7 @@
 package com.caldremch.android.log
 
+import com.caldremch.android.log.inter.DebugLogLevel
+import com.caldremch.android.log.inter.PendingMsg
 import java.text.SimpleDateFormat
 import java.util.Date
 

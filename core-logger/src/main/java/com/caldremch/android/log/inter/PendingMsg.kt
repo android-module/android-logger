@@ -1,5 +1,6 @@
-package com.caldremch.android.log
+package com.caldremch.android.log.inter
 
+import com.caldremch.android.log.debugLog
 import java.util.LinkedList
 
 /**

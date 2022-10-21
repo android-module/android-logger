@@ -1,5 +1,7 @@
-package com.caldremch.android.log
+package com.caldremch.android.log.inter
 
+import com.caldremch.android.log.debugLog
+import com.caldremch.android.log.debugLogSimple
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI

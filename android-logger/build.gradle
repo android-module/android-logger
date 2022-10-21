@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
 }
+apply from: "../versions.gradle"
 
 android {
     namespace 'com.caldremch.android.logger'
@@ -27,8 +28,24 @@ android {
         jvmTarget = '1.8'
     }
 }
+
+ext {
+    myLibraryVersion=android_logger_version
+    myLibraryName="android-logger"
+    myArtifactId="android-logger"
+    myLibraryDescription="android-logger"
+}
+
 def lifecycle_version = "2.5.1"
 dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
-    api(project(":core-logger"))
+    if(isRemote()){
+        api "io.github.caldremch:core-logger:$core_logger_version"
+    }else{
+        api(project(":core-logger"))
+    }
+}
+
+if(isRemote()){
+    apply from: "../gradle-maven-kotlin-dsl/mavencentral-with-maven-publish.gradle"
 }

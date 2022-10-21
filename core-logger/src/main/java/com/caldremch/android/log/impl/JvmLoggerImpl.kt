@@ -1,6 +1,6 @@
 package com.caldremch.android.log.impl
 
-import com.caldremch.android.log.ILogger
+import com.caldremch.android.log.base.ILogger
 
 /**
  * Created by Leon on 2022/8/30
