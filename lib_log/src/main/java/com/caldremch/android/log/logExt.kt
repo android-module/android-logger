@@ -62,7 +62,7 @@ fun debugLog(l: () -> String?) {
 
 private fun handleSend(level: DebugLogLevel, msg: String) {
     val sendMsg = wrapWithLogLevel(level.ordinal, msg, DebugLogInitializer.sServerLogger == null)
-    if (DebugLogInitializer.sServerLogger == null) {
+    if (DebugLogInitializer.sServerLogger == null && DebugLogInitializer.enableWebLog) {
         PendingMsg.addPending(sendMsg)
     } else {
         DebugLogInitializer.sServerLogger?.send(sendMsg)

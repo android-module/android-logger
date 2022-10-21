@@ -34,7 +34,7 @@ class App : Application() {
             }
         })
 //        val logUrl = "ws://192.168.101.2:34001/websocket"
-        DebugLogInitializer.initWithDetect(BuildConfig.DEBUG)
+        DebugLogInitializer.initWithDetect(true)
     }
     fun onForeground(){
         DebugLogInitializer.resumeDetect()

@@ -15,11 +15,12 @@ object DebugLogInitializer {
     internal var enable: Boolean = false
     internal var sLogger: ILogger? = null
     internal var sServerLogger: IServerLogger? = null
+    internal var enableWebLog = false
     private var detectEnable = true
     private const val port = 34000
     private const val maxPort = 34010
-    private lateinit var datagramSocket:DatagramSocket
-    private const val  PROTOCOL = "C1WL2202208"
+    private lateinit var datagramSocket: DatagramSocket
+    private const val PROTOCOL = "C1WL2202208"
 
     private val lock = Object()
 
@@ -29,14 +30,21 @@ object DebugLogInitializer {
     }
 
     @JvmStatic
+    fun initLite(logEnable: Boolean, loggerFactory: ILoggerFactory? = null) {
+        enable = logEnable
+        enableWebLog = false
+        sLogger = (loggerFactory ?: DefaultLoggerFactoryImpl()).create()
+    }
+
+    @JvmStatic
     fun resumeDetect() {
-        if(detectEnable.not()){
-            synchronized(lock){
-                try{
+        if (detectEnable.not()) {
+            synchronized(lock) {
+                try {
                     lock.notify()
-                }catch(e:Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
-                }finally{
+                } finally {
 
                 }
             }
@@ -44,24 +52,24 @@ object DebugLogInitializer {
         detectEnable = true
     }
 
-    private fun circleCreateSocket(port:Int): Int {
+    private fun circleCreateSocket(port: Int): Int {
         System.err.println("检查端口:$port 占用情况")
-        if(port> maxPort) return -1
-        try{
+        if (port > maxPort) return -1
+        try {
             datagramSocket = DatagramSocket(port)
             System.err.println("$port 未占用")
             return port
-        }catch(e:Exception){
-            if(e.message?.contains("EADDRINUSE") == true){
+        } catch (e: Exception) {
+            if (e.message?.contains("EADDRINUSE") == true) {
                 System.err.println("$port 已占用")
-               return circleCreateSocket(port+1)
+                return circleCreateSocket(port + 1)
             }
             throw RuntimeException(e)
         }
 
     }
 
-    fun setEnable(logEnable: Boolean){
+    fun setEnable(logEnable: Boolean) {
         this.enable = logEnable
     }
 
@@ -71,19 +79,18 @@ object DebugLogInitializer {
         durationMills: Long? = null,
         loggerFactory: ILoggerFactory? = null
     ) {
+        enableWebLog = true
         enable = logEnable
         sLogger = loggerFactory?.create() ?: DefaultLoggerFactoryImpl().create()
-
         if (enable) {
             thread(true) {
-
-               val finalPort = circleCreateSocket(port)
+                val finalPort = circleCreateSocket(port)
                 System.err.println("最终端口:$finalPort")
-                if(finalPort == -1) throw RuntimeException("logger init error with all port already used")
+                if (finalPort == -1) throw RuntimeException("logger init error with all port already used")
                 thread(true) {
                     while (true) {
-                        synchronized(lock){
-                            if(detectEnable.not()){
+                        synchronized(lock) {
+                            if (detectEnable.not()) {
                                 lock.wait()
                             }
                             Thread.sleep((durationMills ?: 3L) * 1000)
@@ -93,7 +100,12 @@ object DebugLogInitializer {
                             try {
                                 val address: InetAddress = InetAddress.getByName(broadcastHost)
                                 val datagramPacket =
-                                    DatagramPacket(PROTOCOL.toByteArray(), PROTOCOL.length, address, finalPort)
+                                    DatagramPacket(
+                                        PROTOCOL.toByteArray(),
+                                        PROTOCOL.length,
+                                        address,
+                                        finalPort
+                                    )
                                 datagramSocket.send(datagramPacket)
                             } catch (e: Exception) {
                             }
@@ -107,14 +119,14 @@ object DebugLogInitializer {
                     val packet = DatagramPacket(data, data.size)
                     datagramSocket.receive(packet)
                     val result = String(packet.data, packet.offset, packet.length)
-                    if(result.isNotBlank() && result != PROTOCOL){
-                        if(sServerLogger == null){
+                    if (result.isNotBlank() && result != PROTOCOL) {
+                        if (sServerLogger == null) {
                             System.err.println("创建IServerLogger实例-->$result")
                             sServerLogger = DefaultServerLoggerFactoryImpl(result).create().apply {
                                 System.err.println("IServerLogger执行连接")
                                 connect()
                             }
-                        }else if(sServerLogger!!.isConnected().not()){
+                        } else if (sServerLogger!!.isConnected().not()) {
                             sServerLogger!!.apply {
                                 System.err.println("IServerLogger执行重置并连接")
                                 sServerLogger?.resetUrl(result)
@@ -123,7 +135,6 @@ object DebugLogInitializer {
                     }
                 }
             }
-
 
 
         }
