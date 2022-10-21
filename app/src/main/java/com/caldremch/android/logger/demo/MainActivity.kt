@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.caldremch.android.log.DebugLogInitializer
 import com.caldremch.android.log.debugLog
 import com.caldremch.android.log.errorLog
-import com.caldremch.android.logger.demo.adapter.BlePairedAdapter
+//import com.caldremch.android.logger.demo.adapter.BlePairedAdapter
 import java.net.DatagramSocket
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private val cbOpen: CheckBox by lazy { findViewById(R.id.cbOpen) }
     private val rvPaired: RecyclerView by lazy { findViewById(R.id.rvPaired) }
     private val cdLogger: CheckBox by lazy { findViewById(R.id.cdLogger) }
-    private val adapter = BlePairedAdapter()
+//    private val adapter = BlePairedAdapter()
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
