@@ -19,6 +19,8 @@ object DebugLogInitializer {
     private var hasInit = false
     private val netLogDetector: INetLogDetector by lazy { NetLogDetector.DefaultFactory().create() }
 
+
+
     @JvmStatic
     fun pauseDetect() {
         if (enable) {

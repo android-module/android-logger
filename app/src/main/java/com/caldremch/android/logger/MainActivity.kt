@@ -66,10 +66,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun log(view: View) {
-
         debugLog { "log printer debug" }
         errorLog { "log printer error" }
-        errorLog { "https://blog.csdn.net/ssss_cccc/article/details/103406042" }
+        errorLog { "https://baidu.com" }
     }
 
     fun openBle(view: View) {
