@@ -1,9 +1,7 @@
-package com.caldremch.android.logger.adapter
+package com.caldremch.android.logger.demo.adapter
 
 import android.bluetooth.BluetoothDevice
-import android.content.Context
-import android.view.ViewGroup
-import com.caldremch.android.logger.R
+import com.caldremch.android.logger.demo.R
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 

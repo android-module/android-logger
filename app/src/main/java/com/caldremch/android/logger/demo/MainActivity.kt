@@ -1,21 +1,17 @@
-package com.caldremch.android.logger
+package com.caldremch.android.logger.demo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.Looper
 import android.view.View
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.caldremch.android.ble.BleSpeaker
-import com.caldremch.android.ble.IBleListener
 import com.caldremch.android.log.DebugLogInitializer
 import com.caldremch.android.log.debugLog
 import com.caldremch.android.log.errorLog
-import com.caldremch.android.logger.adapter.BlePairedAdapter
+import com.caldremch.android.logger.demo.adapter.BlePairedAdapter
 import java.net.DatagramSocket
 
 class MainActivity : AppCompatActivity() {
@@ -32,24 +28,24 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        cbSupport.isChecked = BleSpeaker.isDeviceSupportBle()
-        cbOpen.isChecked = BleSpeaker.isOpenBle()
-        BleSpeaker.registerListener(object : IBleListener{
-            override fun onDisable() {
-                cbOpen.isChecked = false
-            }
-
-            override fun onEnable() {
-                cbOpen.isChecked = true
-            }
-        })
+//        cbSupport.isChecked = BleSpeaker.isDeviceSupportBle()
+//        cbOpen.isChecked = BleSpeaker.isOpenBle()
+//        BleSpeaker.registerListener(object : IBleListener{
+//            override fun onDisable() {
+//                cbOpen.isChecked = false
+//            }
+//
+//            override fun onEnable() {
+//                cbOpen.isChecked = true
+//            }
+//        })
 
 //        rvPaired.layoutManager = LinearLayoutManager(this)
 //        rvPaired.adapter = adapter
 
-        BleSpeaker.getBlePairedDevices()?.forEach {
-            debugLog { "蓝牙:${it.name}" }
-        }
+//        BleSpeaker.getBlePairedDevices()?.forEach {
+//            debugLog { "蓝牙:${it.name}" }
+//        }
 
 //        Handler(Looper.getMainLooper()).postDelayed({
 //            DebugLogInitializer.setEnable(false)
@@ -72,6 +68,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openBle(view: View) {
-        BleSpeaker.openBleSetting(this)
+//        BleSpeaker.openBleSetting(this)
     }
 }
