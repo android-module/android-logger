@@ -1,4 +1,4 @@
-![main](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=main)
+![main](https://github.com/github/docs/actions/workflows/android.yml/badge.svg?branch=main)
 
 ## 说明
 
