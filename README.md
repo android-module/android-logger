@@ -1,3 +1,5 @@
+![main](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=main)
+
 ## 说明
 
 - 自动连接探测器(基于socket udp)
