@@ -11,7 +11,7 @@ ext{
 }
 
 project.ext{
-    remoteDep=false
+    remoteDep=true
     core_logger_version="1.0.5-rc1"
     android_logger_version="1.0.0-rc1"
 }
