@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.Looper
 import android.view.View
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.caldremch.android.ble.BleSpeaker
 import com.caldremch.android.ble.IBleListener
+import com.caldremch.android.log.DebugLogInitializer
 import com.caldremch.android.log.debugLog
 import com.caldremch.android.log.errorLog
 import com.caldremch.android.logger.adapter.BlePairedAdapter
@@ -24,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val cbSupport: CheckBox by lazy { findViewById(R.id.cbSupport) }
     private val cbOpen: CheckBox by lazy { findViewById(R.id.cbOpen) }
     private val rvPaired: RecyclerView by lazy { findViewById(R.id.rvPaired) }
+    private val cdLogger: CheckBox by lazy { findViewById(R.id.cdLogger) }
     private val adapter = BlePairedAdapter()
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +49,18 @@ class MainActivity : AppCompatActivity() {
 
         BleSpeaker.getBlePairedDevices()?.forEach {
             debugLog { "蓝牙:${it.name}" }
+        }
+
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            DebugLogInitializer.setEnable(false)
+//        },1000)
+
+        cdLogger.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked){
+                DebugLogInitializer.setUpNetLog()
+            }else{
+                DebugLogInitializer.shutDownNetLog()
+            }
         }
 
     }

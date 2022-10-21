@@ -16,6 +16,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Logger"
 include ':app'
-include ':lib_log'
+include ':core-logger'
 include ':ble-speaker'
 include ':android-logger'

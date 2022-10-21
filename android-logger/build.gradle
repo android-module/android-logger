@@ -30,5 +30,5 @@ android {
 def lifecycle_version = "2.5.1"
 dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
-    api(project(":lib_log"))
+    api(project(":core-logger"))
 }
