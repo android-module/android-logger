@@ -11,7 +11,7 @@ import java.net.Socket
  *
  * 不适合局域网的判断
  */
-object PortUtils {
+internal object PortUtils {
 
     fun isPortAlReadyUse(port:Int):Boolean{
         return isPortAlReadyUse("127.0.0.1", port)

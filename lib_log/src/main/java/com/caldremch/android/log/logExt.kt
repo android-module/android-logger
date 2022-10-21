@@ -1,6 +1,7 @@
 package com.caldremch.android.log
 
-import java.net.URLEncoder
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 /**
@@ -23,11 +24,23 @@ fun errorLogSimple(l: () -> String?) {
     }
 }
 
-private fun wrapJsonWith(level:Int, msg:String):String{
+private val dataFormat by lazy { SimpleDateFormat("yyyy-MM-dd HH:mm:ss") }
+
+private fun wrapWithLogLevel(level:Int, msg:String, isPending:Boolean = false):String{
     val msgBytes = msg.toByteArray()
-    val sendBytes = ByteArray(1+msgBytes.size)
+    var pendingFlagLen = 0;
+    var pendingDate = ""
+    if(isPending){
+        pendingDate = "[<Pending>${dataFormat.format(Date())}]"
+        pendingFlagLen = pendingDate.length
+    }
+    val levelByteTakeIn = 1
+    val sendBytes = ByteArray(levelByteTakeIn+pendingFlagLen+msgBytes.size)
     sendBytes[0] = level.toByte()
-    System.arraycopy(msgBytes, 0, sendBytes, 1, msgBytes.size)
+    if(pendingFlagLen>0){
+        System.arraycopy(pendingDate.toByteArray(), 0, sendBytes, levelByteTakeIn, pendingDate.length)
+    }
+    System.arraycopy(msgBytes, 0, sendBytes,levelByteTakeIn+pendingDate.length, msgBytes.size)
     return String(sendBytes)
 }
 
@@ -35,7 +48,7 @@ fun debugLog(tag: String, l: () -> String?) {
     if (DebugLogInitializer.enable) {
         val msg = l.invoke() ?: ""
         DebugLogInitializer.sLogger?.d(tag, msg)
-        DebugLogInitializer.sServerLogger?.send(wrapJsonWith(0,msg))
+        handleSend(DebugLogLevel.DEBUG, msg)
     }
 }
 
@@ -43,7 +56,16 @@ fun debugLog(l: () -> String?) {
     if (DebugLogInitializer.enable) {
         val msg = l.invoke() ?: ""
         DebugLogInitializer.sLogger?.d(DEFAULT_TAG, msg)
-        DebugLogInitializer.sServerLogger?.send(wrapJsonWith(0,msg))
+        handleSend(DebugLogLevel.DEBUG, msg)
+    }
+}
+
+private fun handleSend(level: DebugLogLevel, msg: String) {
+    val sendMsg = wrapWithLogLevel(level.ordinal, msg, DebugLogInitializer.sServerLogger == null)
+    if (DebugLogInitializer.sServerLogger == null) {
+        PendingMsg.addPending(sendMsg)
+    } else {
+        DebugLogInitializer.sServerLogger?.send(sendMsg)
     }
 }
 
@@ -51,7 +73,7 @@ fun errorLog(l: () -> String?) {
     if (DebugLogInitializer.enable) {
         val msg = l.invoke() ?: ""
         DebugLogInitializer.sLogger?.e(DEFAULT_TAG, msg)
-        DebugLogInitializer.sServerLogger?.send(wrapJsonWith(1,msg))
+        handleSend(DebugLogLevel.ERROR, msg)
     }
 }
 
@@ -60,7 +82,7 @@ fun errorLog(tag: String, l: () -> String?) {
     if (DebugLogInitializer.enable) {
         val msg = l.invoke() ?: ""
         DebugLogInitializer.sLogger?.e(tag, msg)
-        DebugLogInitializer.sServerLogger?.send(wrapJsonWith(1,msg))
+        handleSend(DebugLogLevel.ERROR, msg)
     }
 }
 

@@ -5,7 +5,7 @@ import com.caldremch.android.log.ILogger
 /**
  * Created by Leon on 2022/8/30
  */
-class JvmLoggerImpl : ILogger {
+internal class JvmLoggerImpl : ILogger {
     override fun d(tag: String, msg: String?) {
         System.out.println("$tag:$msg")
     }

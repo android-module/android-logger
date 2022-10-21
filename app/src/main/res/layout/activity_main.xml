@@ -7,15 +7,59 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="logger test"
         android:padding="20dp"
+        android:layout_marginTop="50dp"
         android:background="@color/purple_200"
         android:onClick="log"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_marginTop="50dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="open ble"
+            android:padding="20dp"
+            android:background="@color/purple_200"
+            android:onClick="openBle" />
+        <CheckBox
+            android:id="@+id/cbSupport"
+            android:enabled="false"
+            android:layout_width="wrap_content"
+            android:text="support ble"
+            android:layout_height="wrap_content"/>
+        <CheckBox
+            android:id="@+id/cbOpen"
+            android:enabled="false"
+            android:layout_width="wrap_content"
+            android:text="open ble"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="paired devices"
+            android:layout_height="wrap_content"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/rvPaired"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

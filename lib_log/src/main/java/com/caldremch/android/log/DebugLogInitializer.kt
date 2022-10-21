@@ -61,6 +61,10 @@ object DebugLogInitializer {
 
     }
 
+    fun setEnable(logEnable: Boolean){
+        this.enable = logEnable
+    }
+
     @JvmStatic
     fun initWithDetect(
         logEnable: Boolean,
