@@ -1,7 +1,7 @@
 ![main](https://github.com/android-module/android-logger/actions/workflows/android.yml/badge.svg?branch=main)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat-square)](https://android-arsenal.com/api?level=21)
 ![maven](https://img.shields.io/maven-central/v/io.github.caldremch/android-logger?style=flat-square)
-
+![core](https://img.shields.io/maven-central/v/io.github.caldremch/core-logger?style=flat-square)
 
 ## 说明
 
