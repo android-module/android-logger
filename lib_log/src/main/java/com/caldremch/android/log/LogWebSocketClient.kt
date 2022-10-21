@@ -14,7 +14,7 @@ internal class LogWebSocketClient(private val uri: String) : WebSocketClient(URI
 
     override fun onOpen(handshakedata: ServerHandshake?) {
         open = true
-        debugLogSimple { "onOpen $open" }
+        debugLog { "网络日志已启动完毕, 当前连接:${uri}" }
         //发送pending的信息
         PendingMsg.flush(this)
     }

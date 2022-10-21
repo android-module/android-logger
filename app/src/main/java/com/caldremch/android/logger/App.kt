@@ -20,27 +20,6 @@ class App : Application() {
         super.onCreate()
         debugLog { "我一定是pending消息1" }
         debugLog { "我一定是pending消息2" }
-        ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver{
-
-            override fun onResume(owner: LifecycleOwner) {
-                super.onResume(owner)
-                Log.d(TAG, "onResume: ")
-                onForeground()
-            }
-            
-            override fun onStop(owner: LifecycleOwner) {
-                Log.d(TAG, "onStop: ")
-                onBackground()
-            }
-        })
-//        val logUrl = "ws://192.168.101.2:34001/websocket"
-        DebugLogInitializer.initWithDetect(true)
-    }
-    fun onForeground(){
-        DebugLogInitializer.resumeDetect()
     }
 
-    fun onBackground(){
-        DebugLogInitializer.pauseDetect()
-    }
 }

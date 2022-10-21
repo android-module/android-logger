@@ -36,7 +36,7 @@ def lifecycle_version = "2.5.1"
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation project(":lib_log")
+    implementation project(":android-logger")
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.8'
     implementation project(":ble-speaker")
     implementation 'androidx.appcompat:appcompat:1.4.1'

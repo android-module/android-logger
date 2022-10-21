@@ -21,16 +21,22 @@ object DebugLogInitializer {
     private const val maxPort = 34010
     private lateinit var datagramSocket: DatagramSocket
     private const val PROTOCOL = "C1WL2202208"
-
     private val lock = Object()
+    private var hasInit = false
 
     @JvmStatic
     fun pauseDetect() {
-        detectEnable = false
+        if(enableWebLog){
+            debugLog { "停止探测" }
+            detectEnable = false
+        }
+
     }
 
     @JvmStatic
     fun initLite(logEnable: Boolean, loggerFactory: ILoggerFactory? = null) {
+        if (hasInit) return
+        hasInit = true
         enable = logEnable
         enableWebLog = false
         sLogger = (loggerFactory ?: DefaultLoggerFactoryImpl()).create()
@@ -38,7 +44,11 @@ object DebugLogInitializer {
 
     @JvmStatic
     fun resumeDetect() {
+        if (enableWebLog.not()) {
+            return
+        }
         if (detectEnable.not()) {
+            debugLog { "恢复探测" }
             synchronized(lock) {
                 try {
                     lock.notify()
@@ -53,15 +63,15 @@ object DebugLogInitializer {
     }
 
     private fun circleCreateSocket(port: Int): Int {
-        System.err.println("检查端口:$port 占用情况")
+        debugLog { "检查端口:$port 占用情况" }
         if (port > maxPort) return -1
         try {
             datagramSocket = DatagramSocket(port)
-            System.err.println("$port 未占用")
+            debugLog { "$port 未占用, 使用当前端口" }
             return port
         } catch (e: Exception) {
             if (e.message?.contains("EADDRINUSE") == true) {
-                System.err.println("$port 已占用")
+                errorLog { "$port 已占用,使用+1端口" }
                 return circleCreateSocket(port + 1)
             }
             throw RuntimeException(e)
@@ -79,13 +89,15 @@ object DebugLogInitializer {
         durationMills: Long? = null,
         loggerFactory: ILoggerFactory? = null
     ) {
+        if (hasInit) return
+        hasInit = true
         enableWebLog = true
         enable = logEnable
         sLogger = loggerFactory?.create() ?: DefaultLoggerFactoryImpl().create()
         if (enable) {
             thread(true) {
                 val finalPort = circleCreateSocket(port)
-                System.err.println("最终端口:$finalPort")
+                debugLog { "最终端口:$finalPort" }
                 if (finalPort == -1) throw RuntimeException("logger init error with all port already used")
                 thread(true) {
                     while (true) {
@@ -121,14 +133,14 @@ object DebugLogInitializer {
                     val result = String(packet.data, packet.offset, packet.length)
                     if (result.isNotBlank() && result != PROTOCOL) {
                         if (sServerLogger == null) {
-                            System.err.println("创建IServerLogger实例-->$result")
+                            debugLog { "创建${result}通信通道" }
                             sServerLogger = DefaultServerLoggerFactoryImpl(result).create().apply {
-                                System.err.println("IServerLogger执行连接")
+                                debugLog { "执行连接" }
                                 connect()
                             }
                         } else if (sServerLogger!!.isConnected().not()) {
                             sServerLogger!!.apply {
-                                System.err.println("IServerLogger执行重置并连接")
+                                debugLog { "重置为:${result}通信通道" }
                                 sServerLogger?.resetUrl(result)
                             }
                         }
@@ -141,33 +153,37 @@ object DebugLogInitializer {
 
     }
 
-    @JvmStatic
-    fun init(
-        logEnable: Boolean,
-        websocketUrl: String, //192.168.101.2:8080
-        loggerFactory: ILoggerFactory? = null
-    ) {
-        enable = logEnable
-        sLogger = loggerFactory?.create() ?: DefaultLoggerFactoryImpl().create()
-        websocketUrl.let {
-            sServerLogger = DefaultServerLoggerFactoryImpl(it).create().apply {
-                connect()
-            }
-        }
-    }
+    //可扩展的api, 暂时不开放
+//    @JvmStatic
+//    fun init(
+//        logEnable: Boolean,
+//        websocketUrl: String, //192.168.101.2:8080
+//        loggerFactory: ILoggerFactory? = null
+//    ) {
+//        enable = logEnable
+//        sLogger = loggerFactory?.create() ?: DefaultLoggerFactoryImpl().create()
+//        websocketUrl.let {
+//            sServerLogger = DefaultServerLoggerFactoryImpl(it).create().apply {
+//                connect()
+//            }
+//        }
+//    }
 
 
-    @JvmStatic
-    fun init(
-        logEnable: Boolean,
-        loggerFactory: ILoggerFactory? = null,
-        serverLoggerFactory: IServerLoggerFactory? = null
-    ) {
-        enable = logEnable
-        sLogger = loggerFactory?.create() ?: DefaultLoggerFactoryImpl().create()
-        sServerLogger =
-            serverLoggerFactory?.create()?.apply {
-                connect()
-            }
-    }
+    /**
+     * 可扩展的api, 暂时不开放
+     */
+//    @JvmStatic
+//    fun init(
+//        logEnable: Boolean,
+//        loggerFactory: ILoggerFactory? = null,
+//        serverLoggerFactory: IServerLoggerFactory? = null
+//    ) {
+//        enable = logEnable
+//        sLogger = loggerFactory?.create() ?: DefaultLoggerFactoryImpl().create()
+//        sServerLogger =
+//            serverLoggerFactory?.create()?.apply {
+//                connect()
+//            }
+//    }
 }

@@ -18,3 +18,4 @@ rootProject.name = "Logger"
 include ':app'
 include ':lib_log'
 include ':ble-speaker'
+include ':android-logger'
