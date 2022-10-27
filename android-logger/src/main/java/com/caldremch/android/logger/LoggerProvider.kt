@@ -9,7 +9,7 @@ import com.caldremch.android.log.DebugLogInitializer
 /**
  * Created by Leon on 2022/10/21.
  */
-class LoggerProvider : ContentProvider() {
+internal class LoggerProvider : ContentProvider() {
     override fun onCreate(): Boolean {
         DebugLogInitializer.initWithDetect(true)
         LoggerLifeCycleManager.lifeCycleRegister()

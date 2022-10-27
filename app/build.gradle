@@ -2,15 +2,15 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
-
+apply from: "../versions.gradle"
 android {
     namespace 'com.caldremch.android.logger.demo'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.caldremch.android.logger.demo"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -33,10 +33,16 @@ android {
 }
 
 def lifecycle_version = "2.5.1"
+
+
 dependencies {
 
+    if(isRemote()){
+        implementation "io.github.caldremch:android-logger:$android_logger_version"
+    }else{
+        implementation project(":android-logger")
+    }
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation project(":android-logger")
 //    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.8'
 //    implementation project(":ble-speaker")
     implementation 'androidx.appcompat:appcompat:1.4.1'
